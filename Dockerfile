@@ -1,20 +1,24 @@
-FROM python:3
+# base image
+FROM node:12.2.0-alpine
 
-RUN apt-get update
+# set working directory
+WORKDIR /frontend
 
-RUN apt-get -y install libboost-all-dev
-RUN apt-get -y install libgmp-dev
-RUN apt-get -y install vim
+ADD . /frontend
+RUN apk add --no-cache bash
+RUN npm install
+# Install Chrome for Selenium
+# RUN curl https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -o /chrome.deb
+# RUN dpkg -i /chrome.deb || apt-get install -yf
+# RUN rm /chrome.deb
 
-RUN pip install --upgrade pip
-RUN pip --version
+# Install chromedriver for Selenium
+# RUN curl https://chromedriver.storage.googleapis.com/2.31/chromedriver_linux64.zip -o /usr/local/bin/chromedriver
+# RUN chmod +x /usr/local/bin/chromedriver
 
-RUN pip install flask
-RUN pip install sqlalchemy
-RUN pip install psycopg2
-RUN pip install flask_cors
-RUN pip install flask_api
-RUN pip install werkzeug
-RUN pip install freeze
+RUN npm test
+
+# start app
+EXPOSE 3000
 
 CMD bash
